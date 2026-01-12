@@ -17,11 +17,11 @@ echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.
 echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
 # 科学插件
 echo 'src-git helloworld https://github.com/fw876/helloworld.git' >> feeds.conf.default
-echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >>feeds.conf.default
-echo 'src-git nikiki https://github.com/nikkinikki-org/OpenWrt-nikki.git' >> feeds.conf.default
-echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git' >>feeds.conf.default
-echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git' >>feeds.conf.default
-# echo 'src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git' >>feeds.conf.default
+echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >> feeds.conf.default
+echo 'src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git' >> feeds.conf.default
+echo 'src-git passwall https://github.com/xiaorouji/openwrt-passwall.git;main' >> feeds.conf.default
+echo 'src-git passwall2 https://github.com/xiaorouji/openwrt-passwall2.git;main' >> feeds.conf.default
+# echo 'src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main' >> feeds.conf.default
 # 主题
 git clone --depth=1 -b openwrt-25.12 https://github.com/sbwml/luci-theme-argon.git package/argon
 git clone --depth=1 https://github.com/eamonxg/luci-theme-aurora.git package/luci-theme-aurora
