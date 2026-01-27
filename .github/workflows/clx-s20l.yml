@@ -45,16 +45,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@main
 
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@master
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
       with:
-        root-reserve-mb: 2048    # 保留 2GB 给系统基础运行
-        swap-size-mb: 2048       # ❗关键：设置 2GB 的 Swap，防止 Rust 编译爆内存
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
+        tool-cache: true
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
 
     - name: Initialization Environment
       env:
