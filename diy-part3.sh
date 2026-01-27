@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # https://github.com/P3TERX/Actions-OpenWrt
-# File name: diy-part2.sh
+# File name: diy-part3.sh
 # Description: OpenWrt DIY script part 2 (After Update feeds)
 #
 # Copyright (c) 2019-2024 P3TERX <https://p3terx.com>
@@ -10,19 +10,23 @@
 # See /LICENSE for more information.
 #
 
-# 自定义默认网关，后方的192.168.51.1即是可自定义的部分
-sed -i 's/192.168.1.1/192.168.30.1/g' package/base-files/files/bin/config_generate
-
-#sed -i "s/hostname='ImmortalWrt'/hostname='360T7'/g" package/base-files/files/bin/config_generate
-
-# 固件版本名称自定义
-#sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='OpenWrt By gino $(date +"%Y%m%d")'/g" package/base-files/files/etc/openwrt_release
-
-# 取消原主题luci-theme-bootstrap 为默认主题
-#sed -i '/set luci.main.mediaurlbase=\/luci-static\/bootstrap/d' feeds/luci/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
-
-# 修改 argon 为默认主题
-#sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-
-# 删除原默认主题
-#rm -rf package/lean/luci-theme-bootstrap
+# 科学插件
+echo 'src-git helloworld https://github.com/fw876/helloworld.git' >> feeds.conf.default
+echo 'src-git openclash https://github.com/vernesong/OpenClash.git' >> feeds.conf.default
+echo 'src-git momo https://github.com/nikkinikki-org/OpenWrt-momo.git' >> feeds.conf.default
+echo 'src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git' >> feeds.conf.default
+echo 'src-git passwall https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' >> feeds.conf.default
+echo 'src-git passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main' >> feeds.conf.default
+echo 'src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' >> feeds.conf.default
+# 插件添加
+# echo 'src-git watchdog https://github.com/sirpdboy/luci-app-watchdog.git;main' >> feeds.conf.default
+git clone https://github.com/sirpdboy/luci-app-watchdog package/watchdog
+echo 'src-git authshield https://github.com/iv7777/luci-app-authshield.git;main' >> feeds.conf.default
+echo 'src-git easytier https://github.com/EasyTier/luci-app-easytier.git;main' >> feeds.conf.default
+echo 'src-git tailscale-community https://github.com/Tokisaki-Galaxy/luci-app-tailscale-community.git;main' >> feeds.conf.default
+# 主题
+# git clone --depth=1 -b openwrt-24.10 https://github.com/sbwml/luci-theme-argon.git package/argon
+git clone --depth=1 https://github.com/eamonxg/luci-theme-aurora.git package/luci-theme-aurora
+git clone --depth=1 https://github.com/eamonxg/luci-app-aurora-config.git package/luci-app-aurora-config
+git clone --depth=1 https://github.com/sirpdboy/luci-theme-kucat.git package/luci-theme-kucat
+git clone --depth=1 -b master https://github.com/sirpdboy/luci-app-kucat-config.git package/luci-app-kucat-config
