@@ -10,15 +10,26 @@
 # See /LICENSE for more information.
 #
 
-#修复Rust编译失败
-RUST_FILE=$(find ../feeds/packages/ -maxdepth 3 -type f -wholename "*/rust/Makefile")
-if [ -f "$RUST_FILE" ]; then
-	echo " "
+# =========================================================
+# 修复 Rust 编译失败：替换为 ImmortalWrt 的稳定版 Rust
+# =========================================================
 
-	sed -i 's/ci-llvm=true/ci-llvm=false/g' $RUST_FILE
+# 1. 删除 feeds 中那个下载失败的 Rust (1.89.0)
+echo "Removing broken Rust package..."
+rm -rf feeds/packages/lang/rust
 
-	cd $PKG_PATH && echo "rust has been fixed!"
-fi
+# 2. 克隆 ImmortalWrt 的 packages 仓库 (临时)
+# 这里使用 openwrt-23.05 分支，因为它的 Rust 版本极其稳定(通常是 1.77-1.79)，且一定有预编译缓存
+echo "Cloning stable Rust from ImmortalWrt..."
+git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/packages.git temp_packages
+
+# 3. 将稳定的 Rust 搬运到你的编译环境中
+cp -r temp_packages/lang/rust feeds/packages/lang/
+
+# 4. 清理临时文件
+rm -rf temp_packages
+
+echo "Rust has been replaced with a stable version!"
 
 #修复DiskMan编译失败
 DM_FILE="./luci-app-diskman/applications/luci-app-diskman/Makefile"
