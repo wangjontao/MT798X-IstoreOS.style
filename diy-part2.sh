@@ -32,23 +32,26 @@ rm -rf temp_packages
 echo "Rust has been replaced with a stable version!"
 
 # =========================================================
-# 修复 QuickStart 首页温度显示问题
-# 逻辑：将仓库中的 istore_backend.lua 复制到 files 目录进行强制覆盖
+# 修复 QuickStart 首页温度显示问题 (方案：修改源码)
 # =========================================================
+# 定义源文件路径 (仓库根目录下的 istore/istore_backend.lua)
+CUSTOM_LUA="../istore/istore_backend.lua"
 
-# 1. 创建目标目录结构 (相当于路由器的 /usr/lib/lua/luci/controller/)
-mkdir -p files/usr/lib/lua/luci/controller/
+# 查找 feeds 目录下的目标文件 (通常在 feeds/nas_luci/... 或 feeds/istore/...)
+# 使用 find 确保无论路径怎么变都能找到
+TARGET_LUA=$(find feeds -name "istore_backend.lua" -type f)
 
-# 2. 复制文件并覆盖
-# 注意：.. 代表上级目录，因为 diy-part2.sh 运行在 openwrt/ 目录下
-if [ -f "../istore/istore_backend.lua" ]; then
-    echo "Found custom istore_backend.lua, overwriting..."
-    cp -f ../istore/istore_backend.lua files/usr/lib/lua/luci/controller/istore_backend.lua
-    
-    # 3. 赋予执行权限 (防止权限问题导致无法读取)
-    chmod 644 files/usr/lib/lua/luci/controller/istore_backend.lua
+if [ -n "$TARGET_LUA" ]; then
+    echo "Found target file: $TARGET_LUA"
+    if [ -f "$CUSTOM_LUA" ]; then
+        echo "Overwriting with custom file..."
+        cp -f "$CUSTOM_LUA" "$TARGET_LUA"
+        echo "Overwrite Success!"
+    else
+        echo "❌ Error: Custom file ($CUSTOM_LUA) not found in repo!"
+    fi
 else
-    echo "WARNING: Custom istore_backend.lua not found!"
+    echo "❌ Error: Target istore_backend.lua not found in feeds!"
 fi
 
 #修复DiskMan编译失败
