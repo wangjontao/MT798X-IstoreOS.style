@@ -16,14 +16,15 @@ echo 'src-git nas https://github.com/linkease/nas-packages.git;master' >> feeds.
 echo 'src-git nas_luci https://github.com/linkease/nas-packages-luci.git;main' >> feeds.conf.default
 
 # 科学插件
-git clone --depth=1 https://github.com/QiuSimons/luci-app-daed package/luci-app-daed
-git clone --depth=1 -b main https://github.com/fw876/helloworld package/luci-app-ssr-plus
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall package/luci-app-passwall
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall2 package/luci-app-passwall2
-git clone --depth=1 https://github.com/Openwrt-Passwall/openwrt-passwall-packages package/openwrt-passwall
-git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-momo package/luci-app-momo
-git clone --depth=1 https://github.com/nikkinikki-org/OpenWrt-nikki package/luci-app-nikki
-git clone --depth=1 -b master https://github.com/vernesong/OpenClash package/luci-app-openclash
+sed -i '1i src-git passwall https://github.com/Openwrt-Passwall/openwrt-passwall.git;main' feeds.conf.default
+sed -i '2i src-git passwall2 https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main' feeds.conf.default
+sed -i '3i src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main' feeds.conf.default
+sed -i '4i src-git OpenClash https://github.com/vernesong/OpenClash.git;master' feeds.conf.default
+sed -i '5i src-git nikki https://github.com/nikkinikki-org/OpenWrt-nikki.git;main' feeds.conf.default
+sed -i '6i src-git momo https://github.com/nikkinikki-org/OpenWrt-momo.git;main' feeds.conf.default
+sed -i '7i src-git daed https://github.com/QiuSimons/luci-app-daed.git;main' feeds.conf.default
+sed -i '8i src-git ssr-plus https://github.com/fw876/helloworld.git;main' feeds.conf.default
+
 # 插件添加
 git clone --depth=1 https://github.com/sirpdboy/luci-app-watchdog package/watchdog
 git clone --depth=1 https://github.com/sirpdboy/luci-app-taskplan package/taskplan
