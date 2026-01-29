@@ -20,7 +20,7 @@ rm -rf feeds/packages/lang/rust
 
 # 2. 克隆 ImmortalWrt 其他 分支的 packages
 echo "Cloning stable Rust from ImmortalWrt..."
-git clone --depth 1 -b openwrt-25.12 https://github.com/immortalwrt/packages.git temp_packages
+git clone --depth 1 -b openwrt-23.05 https://github.com/immortalwrt/packages.git temp_packages
 
 # 3. 偷梁换柱：把稳定的 Rust 搬进来
 cp -r temp_packages/lang/rust feeds/packages/lang/
