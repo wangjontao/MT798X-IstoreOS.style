@@ -32,7 +32,7 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
-on:
+`on`:
   push:
     paths-ignore:
       - '.github/workflows/**'
