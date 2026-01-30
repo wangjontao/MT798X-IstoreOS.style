@@ -32,7 +32,6 @@ env:
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
 
-# 🔧 修复：使用引号包裹 on，避免解析冲突
 "on":
   push:
     branches:
