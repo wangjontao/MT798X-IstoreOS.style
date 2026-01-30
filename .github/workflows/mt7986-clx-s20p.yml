@@ -187,10 +187,57 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
-        echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
+        # 1. 从 REPO_URL 提取作者名 (https://github.com/dailook/xxx -> dailook)
+        AUTHOR=$(echo "${{ env.REPO_URL }}" | cut -d'/' -f4)
+        
+        # 2. 设备名称（使用 job id，确保你的 job id 是 mt7986-clx-s20p）
+        # 如果担心不一致，建议在 env 中添加 DEVICE_NAME: mt7986-clx-s20p，然后改成 ${{ env.DEVICE_NAME }}
+        DEVICE_NAME="${{ github.job }}"
+        
+        # 3. 分支名称 (openwrt-24.10-6.6)
+        BRANCH="${{ env.REPO_BRANCH }}"
+        
+        # 4. 编译时间 (20240130-1430)
+        BUILD_TIME=$(date +"%Y%m%d-%H%M")
+        
+        # 组合成最终 Tag: mt7986-clx-s20p-dailook-openwrt-24.10-6.6-20240130-1430
+        RELEASE_TAG="${DEVICE_NAME}-${AUTHOR}-${BRANCH}-${BUILD_TIME}"
+        
+        # 清理可能影响 Git tag 的字符（如空格、特殊符号替换为连字符）
+        RELEASE_TAG=$(echo "$RELEASE_TAG" | sed 's/[^a-zA-Z0-9._-]/-/g')
+        
+        echo "release_tag=${RELEASE_TAG}" >> $GITHUB_OUTPUT
+        echo "::notice::生成 Release Tag: ${RELEASE_TAG}"
+        
+        # 生成更详细的 release.txt
         touch release.txt
-        [ $UPLOAD_COWTRANSFER = true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
+        echo "## 🚀 OpenWrt 自动编译固件" >> release.txt
+        echo "" >> release.txt
+        echo "### 📋 编译信息" >> release.txt
+        echo "| 项目 | 详情 |" >> release.txt
+        echo "|------|------|" >> release.txt
+        echo "| 📱 设备名称 | \`${DEVICE_NAME}\` |" >> release.txt
+        echo "| 👤 源码作者 | \`${AUTHOR}\` |" >> release.txt
+        echo "| 🔗 源码仓库 | ${{ env.REPO_URL }} |" >> release.txt
+        echo "| 🌿 分支版本 | \`${BRANCH}\` |" >> release.txt
+        echo "| ⏰ 编译时间 | $(date '+%Y-%m-%d %H:%M:%S') (Shanghai) |" >> release.txt
+        echo "| 🏷️ 版本标签 | \`${RELEASE_TAG}\` |" >> release.txt
+        echo "" >> release.txt
+        
+        # 添加下载链接（如果启用了对应上传）
+        if [ "${{ env.UPLOAD_COWTRANSFER }}" = "true" ] && [ -n "${{ steps.cowtransfer.outputs.url }}" ]; then
+          echo "🔗 **Cowtransfer**: [点击下载](${{ steps.cowtransfer.outputs.url }})" >> release.txt
+          echo "" >> release.txt
+        fi
+        
+        if [ "${{ env.UPLOAD_WETRANSFER }}" = "true" ] && [ -n "${{ steps.wetransfer.outputs.url }}" ]; then
+          echo "🔗 **WeTransfer**: [点击下载](${{ steps.wetransfer.outputs.url }})" >> release.txt
+          echo "" >> release.txt
+        fi
+        
+        echo "---" >> release.txt
+        echo "> ⚠️ **注意**: 请根据自己的机型选择对应的 Factory 或 Sysupgrade 固件" >> release.txt
+        
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
