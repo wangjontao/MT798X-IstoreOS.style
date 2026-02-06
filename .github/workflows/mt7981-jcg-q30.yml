@@ -166,6 +166,17 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+    - name: Fix Rust vendor missing Cargo.toml.orig
+      run: |
+        cd openwrt
+        echo ">>> Fixing Rust vendor .orig files..."
+        find build_dir -path "*rustc-*-src/vendor/*/Cargo.toml" -type f | while read f; do
+          orig="${f}.orig"
+          if [ ! -f "$orig" ]; then
+            echo "Creating $orig"
+            cp "$f" "$orig"
+          fi
+        done
 
     # 9. 编译固件 
     - name: Compile the firmware （编译固件）
