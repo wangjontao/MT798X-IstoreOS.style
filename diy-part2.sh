@@ -167,6 +167,12 @@ fi
 # 给 configure 脚本添加 --disable-werror 参数，忽略警告
 sed -i 's/CONFIGURE_ARGS +=/CONFIGURE_ARGS += --disable-werror/' feeds/packages/libs/libxcrypt/Makefile
 
+# === 彻底禁用 Rust（避免 OpenWrt 24.10 + Actions 编译炸锅）===
+sed -i 's/CONFIG_PACKAGE_rust=y/# CONFIG_PACKAGE_rust is not set/g' .config
+sed -i 's/CONFIG_PACKAGE_rust-src=y/# CONFIG_PACKAGE_rust-src is not set/g' .config
+sed -i 's/CONFIG_PACKAGE_cargo=y/# CONFIG_PACKAGE_cargo is not set/g' .config
+
+
 # 自定义默认网关，后方的192.168.30.1即是可自定义的部分
 sed -i 's/192.168.[0-9]*.[0-9]*/192.168.30.1/g' package/base-files/files/bin/config_generate
 
