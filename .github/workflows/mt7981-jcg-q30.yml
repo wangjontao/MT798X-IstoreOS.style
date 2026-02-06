@@ -167,6 +167,20 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+            # 8.5 修复 Rust vendor 校验缺失文件（避免 Cargo.toml.orig 报错）
+    - name: Fix Rust vendor checksum issue
+      run: |
+        cd openwrt
+        echo ">>> Fixing Rust vendor missing .orig files if any..."
+        find build_dir -path "*rustc-*-src/vendor/*/Cargo.toml" -type f | while read f; do
+          orig="${f}.orig"
+          if [ ! -f "$orig" ]; then
+            echo "Creating missing $orig"
+            cp "$f" "$orig"
+          fi
+        done
+
+
     # 9. 编译固件 
     - name: Compile the firmware （编译固件）
       id: compile
